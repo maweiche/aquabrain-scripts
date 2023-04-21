@@ -24,7 +24,7 @@ streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=A
 
 # Air Temp Sensor - DHT22
 # Initialize the DHT device, with data pin connected to:
-dhtSensor = adafruit_dht.DHT22(board.D4)
+dhtSensor = adafruit_dht.DHT22(board.D4, use_pulseio=False)
 
 # Water Temp Sensor - DS18B20 ----------------
 os.system('modprobe w1-gpio')
@@ -69,6 +69,7 @@ while True:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(C)", temp_d)
         else:
+                
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
