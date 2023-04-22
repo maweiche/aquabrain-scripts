@@ -193,7 +193,7 @@ while True:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
                 streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
-                streamer.log(WATER_PUMP_NAME + " Status", RELAY.status)
+                streamer.log(WATER_PUMP_NAME + " Water Pump Run Time (seconds)", SECONDS_TO_WATER)
         humidity = format(humidity,".2f")
         streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
         streamer.flush()
