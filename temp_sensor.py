@@ -42,6 +42,7 @@ def read_temp_raw():
         return lines
 
 def read_temp():
+        print("Reading temp")
         lines = read_temp_raw()
         while lines[0].strip()[-3:] != 'YES':
                 time.sleep(0.2)
@@ -50,6 +51,7 @@ def read_temp():
         if equals_pos != -1:
                 temp_string = lines[1][equals_pos+2:]
                 temp_d = float(temp_string) / 1000.0
+                print("Temp: " + str(temp_d))
                 return temp_d
 # --------------------------------------------
 
@@ -70,9 +72,7 @@ while True:
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(C)", temp_d)
-                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
         else:
-                
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)

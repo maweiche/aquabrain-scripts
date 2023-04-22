@@ -37,7 +37,7 @@ try:
       time.sleep(0.00001)
 
       GPIO.output(PIN_TRIGGER, GPIO.LOW)
-
+            
       while GPIO.input(PIN_ECHO)==0:
             pulse_start_time = time.time()
       while GPIO.input(PIN_ECHO)==1:
