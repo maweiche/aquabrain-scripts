@@ -4,6 +4,9 @@ import board
 # Water Temp Sensor - DS18B20
 import os
 import glob
+# Distance Sensor - HC-SR04
+import RPi.GPIO as GPIO
+import time
 # Constants
 from ISStreamer.Streamer import Streamer
 import time
@@ -12,6 +15,7 @@ import time
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Air"
 WATER_SENSOR_LOCATION_NAME = "Water"
+DISTANCE_SENSOR_A_LOCATION_NAME = "Filter Water Level"
 BUCKET_NAME = ":partly_sunny: Room Temperatures"
 BUCKET_KEY = "4WV9PEU4G6K4"
 ACCESS_KEY = "ist_CsfUMjskTuo0o7UEoW-D7tjPb68ZwQru"
@@ -52,6 +56,48 @@ def read_temp():
                 return temp_d
 # --------------------------------------------
 
+# Distance Sensor - HC-SR04 ------------------
+GPIO.setmode (GPIO.BCM)
+
+TRIG_PIN=23
+ECHO_PIN=32
+
+GPIO.setup(TRIG_PIN,GPIO.OUT)
+GPIO.setup(ECHO_PIN,GPIO.IN)
+GPIO.OUTPUT(TRIG_PIN,GPIO.LOW)
+
+def read_distance():
+        print("Waiting for sensor to settle")
+
+        time.sleep(2)
+
+        print("Calculating distance")
+
+        GPIO.output(TRIG_PIN,GPIO.HIGH)
+
+        time.sleep(0.00001)
+
+
+        GPIO.output(TRIG_PIN,GPIO.LOW)
+
+        while GPIO.input(ECHO_PIN)==0:
+                pulse_start=time.time()
+
+        while GPIO.input(ECHO_PIN)==1:
+                pulse_end=time.time()
+
+        pulse_duration=pulse_end-pulse_start
+
+        pulse_duration=round(pulse_duration,2,2)
+
+        distance=3400*pulse_duration
+
+        print("Object is",distance,"cm away from the sensor")
+
+        GPIO.cleanup()
+        return distance
+# --------------------------------------------  
+
 while True:
         try:
                 # Air Sensor
@@ -61,6 +107,9 @@ while True:
                 # Water Sensor
                 temp_d = read_temp()
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
+
+                # Distance Sensor
+                distance = read_distance()
         except RuntimeError:
                 print("RuntimeError, trying again...")
                 continue
@@ -68,11 +117,15 @@ while True:
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(C)", temp_d)
+                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
         else:
                 
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
+                # convert distance from cm to inches
+                distance_inches = format(distance * 0.393701, ".2f")
+                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(inches)", distance_inches)
         humidity = format(humidity,".2f")
         streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
         streamer.flush()
