@@ -57,7 +57,7 @@ streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=A
 
 # Initialize the DHT device, with data pin connected to:
 # dhtSensor = adafruit_dht.DHT22(7, use_pulseio=False)
-dhtSensor = adafruit_dht.DHT22(board.D4, use_pulseio=False)
+dhtSensor = adafruit_dht.DHT22(4, use_pulseio=False)
 
 # Water Pump - Relay -------------------------
 # WATERING_TIME must be in "00:00:00 PM" format
