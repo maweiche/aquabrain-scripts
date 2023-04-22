@@ -1,6 +1,19 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
+from ISStreamer.Streamer import Streamer
+
+DISTANCE_SENSOR_A_LOCATION_NAME = "Filter Water Level"
+BUCKET_NAME = ":partly_sunny: Room Temperatures"
+BUCKET_KEY = "4WV9PEU4G6K4"
+ACCESS_KEY = "ist_CsfUMjskTuo0o7UEoW-D7tjPb68ZwQru"
+MINUTES_BETWEEN_READS = 10
+METRIC_UNITS = False
+
+
+# Live Data Stream - Initializer
+streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=ACCESS_KEY)
+
 
 try:
       GPIO.setmode(GPIO.BOARD)
@@ -33,6 +46,10 @@ try:
       pulse_duration = pulse_end_time - pulse_start_time
       distance = round(pulse_duration * 17150, 2)
       print("Distance:",distance,"cm")
+      # convert distance from cm to inches
+      distance_inches = format(distance * 0.393701, ".2f")
+      streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(inches)", distance_inches)
+      streamer.flush()
 
 finally:
       GPIO.cleanup()
