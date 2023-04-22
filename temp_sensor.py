@@ -32,6 +32,7 @@ GPIO.output(PIN_TRIGGER, GPIO.LOW)
 AIR_SENSOR_LOCATION_NAME = "Air"
 WATER_SENSOR_LOCATION_NAME = "Water"
 DISTANCE_SENSOR_A_LOCATION_NAME = "Filter Water Level"
+WATER_PUMP_NAME = "Water Pump"
 BUCKET_NAME = ":partly_sunny: Room Temperatures"
 BUCKET_KEY = "4WV9PEU4G6K4"
 ACCESS_KEY = "ist_CsfUMjskTuo0o7UEoW-D7tjPb68ZwQru"
@@ -178,12 +179,10 @@ while True:
                 print("Distance:",distance,"cm")
                 print("Running Water Pump Actions")
                 water_pump_actions()
+                GPIO.cleanup()
         except RuntimeError:
                 print("RuntimeError, trying again...")
                 continue
-
-        finally:
-                GPIO.cleanup()
                 
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
@@ -194,6 +193,7 @@ while True:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
                 streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
+                streamer.log(WATER_PUMP_NAME + " Status", RELAY.status)
         humidity = format(humidity,".2f")
         streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
         streamer.flush()
