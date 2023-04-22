@@ -1,6 +1,6 @@
 # Air Temp Sensor - DHT22
 import adafruit_dht
-# import board
+import board
 # Water Temp Sensor - DS18B20
 import os
 import glob
@@ -12,10 +12,10 @@ import time
 
 
 # Distance Sensor
-GPIO.setmode(GPIO.BOARD)
+# GPIO.setmode(GPIO.BOARD)
 
-PIN_TRIGGER = 23
-PIN_ECHO = 32
+PIN_TRIGGER = board.D11
+PIN_ECHO = board.D12
 
 GPIO.setup(PIN_TRIGGER, GPIO.OUT)
 GPIO.setup(PIN_ECHO, GPIO.IN)
@@ -36,12 +36,11 @@ METRIC_UNITS = False
 # Live Data Stream - Initializer
 streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=ACCESS_KEY)
 
-# Air Temp Sensor - DHT22 using GPIO 7
-air_pin = 7
+# Air Temp Sensor - DHT22
 
 # Initialize the DHT device, with data pin connected to:
 # dhtSensor = adafruit_dht.DHT22(7, use_pulseio=False)
-dhtSensor = adafruit_dht.DHT22(air_pin, use_pulseio=False)
+dhtSensor = adafruit_dht.DHT22(board.D4, use_pulseio=False)
 
 # Water Temp Sensor - DS18B20 ----------------
 os.system('modprobe w1-gpio')
