@@ -68,15 +68,19 @@ while True:
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
    
                 # Distance Sensor
-                GPIO.setmode(GPIO.BOARD)
+                # GPIO.setmode(GPIO.BOARD)
+                board.setmode(board.BOARD)
 
                 PIN_TRIGGER = 23
                 PIN_ECHO = 32
 
-                GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-                GPIO.setup(PIN_ECHO, GPIO.IN)
+                # GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+                # GPIO.setup(PIN_ECHO, GPIO.IN)
+                board.setup(PIN_TRIGGER, board.OUT)
+                board.setup(PIN_ECHO, board.IN)
 
-                GPIO.output(PIN_TRIGGER, GPIO.LOW)
+                # GPIO.output(PIN_TRIGGER, GPIO.LOW)
+                board.output(PIN_TRIGGER, board.LOW)
 
                 print("Waiting for sensor to settle")
 
@@ -84,15 +88,19 @@ while True:
 
                 print("Calculating distance")
 
-                GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+                # GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+                board.output(PIN_TRIGGER, board.HIGH)
 
                 time.sleep(0.00001)
 
-                GPIO.output(PIN_TRIGGER, GPIO.LOW)
+                # GPIO.output(PIN_TRIGGER, GPIO.LOW)
+                board.output(PIN_TRIGGER, board.LOW)
 
-                while GPIO.input(PIN_ECHO)==0:
+                # while GPIO.input(PIN_ECHO)==0:
+                while board.input(PIN_ECHO)==0:
                         pulse_start_time = time.time()
-                while GPIO.input(PIN_ECHO)==1:
+                # while GPIO.input(PIN_ECHO)==1:
+                while board.input(PIN_ECHO)==1:
                         pulse_end_time = time.time()
 
                 pulse_duration = pulse_end_time - pulse_start_time
@@ -104,7 +112,8 @@ while True:
                 continue
 
         finally:
-                GPIO.cleanup()
+                # GPIO.cleanup()
+                board.cleanup()
                 
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
