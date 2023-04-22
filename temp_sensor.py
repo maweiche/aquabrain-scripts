@@ -11,6 +11,9 @@ from ISStreamer.Streamer import Streamer
 import time
 
 
+# Distance Sensor
+GPIO.setmode(GPIO.BOARD)
+
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Air"
 WATER_SENSOR_LOCATION_NAME = "Water"
@@ -67,20 +70,15 @@ while True:
                 temp_d = read_temp()
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
    
-                # Distance Sensor
-                # GPIO.setmode(GPIO.BOARD)
-                board.setmode(board.BOARD)
+                
 
                 PIN_TRIGGER = 23
                 PIN_ECHO = 32
 
-                # GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-                # GPIO.setup(PIN_ECHO, GPIO.IN)
-                board.setup(PIN_TRIGGER, board.OUT)
-                board.setup(PIN_ECHO, board.IN)
+                GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+                GPIO.setup(PIN_ECHO, GPIO.IN)
 
-                # GPIO.output(PIN_TRIGGER, GPIO.LOW)
-                board.output(PIN_TRIGGER, board.LOW)
+                GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
                 print("Waiting for sensor to settle")
 
@@ -88,19 +86,15 @@ while True:
 
                 print("Calculating distance")
 
-                # GPIO.output(PIN_TRIGGER, GPIO.HIGH)
-                board.output(PIN_TRIGGER, board.HIGH)
+                GPIO.output(PIN_TRIGGER, GPIO.HIGH)
 
                 time.sleep(0.00001)
 
-                # GPIO.output(PIN_TRIGGER, GPIO.LOW)
-                board.output(PIN_TRIGGER, board.LOW)
+                GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
-                # while GPIO.input(PIN_ECHO)==0:
-                while board.input(PIN_ECHO)==0:
+                while GPIO.input(PIN_ECHO)==0:
                         pulse_start_time = time.time()
-                # while GPIO.input(PIN_ECHO)==1:
-                while board.input(PIN_ECHO)==1:
+                while GPIO.input(PIN_ECHO)==1:
                         pulse_end_time = time.time()
 
                 pulse_duration = pulse_end_time - pulse_start_time
@@ -111,13 +105,13 @@ while True:
                 print("RuntimeError, trying again...")
                 continue
 
-        # finally:
-                # GPIO.cleanup()
+        finally:
+                GPIO.cleanup()
                 
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(C)", temp_d)
-                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
+                
         else:
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
