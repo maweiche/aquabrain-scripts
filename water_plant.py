@@ -8,7 +8,7 @@ import ssl
 # WATERING_TIME must be in "00:00:00 PM" format
 WATERING_TIME = '11:59:50 AM'
 SECONDS_TO_WATER = 10
-RELAY = Hardware.Relay(12, False)
+RELAY = Hardware.Relay(7, False)
 EMAIL_MESSAGES = {
     'last_watered': {
         'subject': 'Raspberry Pi: Plant Watering Time',
@@ -49,6 +49,8 @@ def send_check_water_level_email():
 
 def water_plant(relay, seconds):
     relay.on()
+    # check to see if relay is on
+    
     print("Plant is being watered!")
     time.sleep(seconds)
     print("Watering is finished!")
