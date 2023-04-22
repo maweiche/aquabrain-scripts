@@ -8,7 +8,7 @@ import ssl
 # WATERING_TIME must be in "00:00:00 PM" format
 WATERING_TIME = '11:59:50 AM'
 SECONDS_TO_WATER = 10
-RELAY = Hardware.Relay(7, False)
+RELAY = Hardware.Relay(4, False)
 EMAIL_MESSAGES = {
     'last_watered': {
         'subject': 'Raspberry Pi: Plant Watering Time',
