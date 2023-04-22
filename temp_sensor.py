@@ -124,9 +124,7 @@ def water_pump_actions():
 
 
 base_dir = '/sys/bus/w1/devices/'
-# device_folder = glob.glob(base_dir + '28*')[0] // why would this say list is out of range?
-# why is above line returning error saying list is out of range? 
-
+device_folder = glob.glob(base_dir + '28*')[0] 
 device_file = device_folder + '/w1_slave'
 
 def read_temp_raw():
