@@ -17,9 +17,6 @@ import ssl
 from ISStreamer.Streamer import Streamer
 import time
 
-# Water Temp Sensor - DS18B20 ----------------
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
 
 # Distance Sensor
 GPIO.setmode(GPIO.BCM)
@@ -31,11 +28,6 @@ GPIO.setup(PIN_TRIGGER, GPIO.OUT)
 GPIO.setup(PIN_ECHO, GPIO.IN)
 
 GPIO.output(PIN_TRIGGER, GPIO.LOW)
-
-# Servo Motor - SG90
-GPIO.setup(24, GPIO.OUT)
-servo = GPIO.PWM(24, 50)
-# servo.start(0)
 
 
 # --------- User Settings ---------
@@ -57,7 +49,11 @@ streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=A
 
 # Initialize the DHT device, with data pin connected to:
 # dhtSensor = adafruit_dht.DHT22(7, use_pulseio=False)
-dhtSensor = adafruit_dht.DHT22(4, use_pulseio=False)
+dhtSensor = adafruit_dht.DHT22(board.D4, use_pulseio=False)
+
+# Water Temp Sensor - DS18B20 ----------------
+os.system('modprobe w1-gpio')
+os.system('modprobe w1-therm')
 
 # Water Pump - Relay -------------------------
 # WATERING_TIME must be in "00:00:00 PM" format
@@ -104,14 +100,17 @@ def send_check_water_level_email():
 
 def water_plant(relay, seconds):
     relay.on()
+    # check to see if relay is on
+    
     print("Plant is being watered!")
     time.sleep(seconds)
     print("Watering is finished!")
     relay.off()
 
 def water_pump_actions():
-#     time_keeper = TK.TimeKeeper(TK.TimeKeeper.get_current_time())
+    time_keeper = TK.TimeKeeper(TK.TimeKeeper.get_current_time())
     water_plant(RELAY, SECONDS_TO_WATER)
+    print("\nPlant was last watered at {}".format(time_keeper.time_last_watered))
 #     if(time_keeper.current_time == WATERING_TIME):
 #         water_plant(RELAY, SECONDS_TO_WATER)
 #         time_keeper.set_time_last_watered(TK.TimeKeeper.get_current_time())
@@ -124,7 +123,7 @@ def water_pump_actions():
 
 
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0] 
+device_folder = glob.glob(base_dir + '28*')[0]
 device_file = device_folder + '/w1_slave'
 
 def read_temp_raw():
@@ -145,17 +144,6 @@ def read_temp():
                 temp_d = float(temp_string) / 1000.0
                 print("Temp: " + str(temp_d))
                 return temp_d
-        
-def start_servo():
-        print("Starting servo")
-        # have the servo rotate 180 degrees and then back to 0 then turn off
-        servo.ChangeDutyCycle(2) # 0 degrees
-        time.sleep(1)
-
-        servo.ChangeDutyCycle(12) # 180 degrees
-        time.sleep(1)
-        print("Servo stopped")
-        
 # --------------------------------------------
 
 while True:
@@ -192,8 +180,7 @@ while True:
                 distance = round(pulse_duration * 17150, 2)
                 print("Distance:",distance,"cm")
                 print("Running Water Pump Actions")
-                start_servo()
-                # water_pump_actions()
+                water_pump_actions()
                 GPIO.cleanup()
         except RuntimeError:
                 print("RuntimeError, trying again...")
