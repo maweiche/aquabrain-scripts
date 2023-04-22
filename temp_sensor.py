@@ -57,16 +57,14 @@ def read_temp():
 # --------------------------------------------
 
 # Distance Sensor - HC-SR04 ------------------
-GPIO.setmode (GPIO.BCM)
-
-TRIG_PIN=23
-ECHO_PIN=32
-
-GPIO.setup(TRIG_PIN,GPIO.OUT)
-GPIO.setup(ECHO_PIN,GPIO.IN)
-GPIO.OUTPUT(TRIG_PIN,GPIO.LOW)
 
 def read_distance():
+        GPIO.setmode (GPIO.BCM)
+        TRIG_PIN=23
+        ECHO_PIN=32
+        GPIO.setup(TRIG_PIN,GPIO.OUT)
+        GPIO.setup(ECHO_PIN,GPIO.IN)
+        GPIO.OUTPUT(TRIG_PIN,GPIO.LOW)
         print("Waiting for sensor to settle")
 
         time.sleep(2)
