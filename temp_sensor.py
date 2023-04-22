@@ -12,6 +12,7 @@ from classes import TimeKeeper as TK
 import schedule
 import smtplib
 import ssl
+
 # Constants
 from ISStreamer.Streamer import Streamer
 import time
@@ -27,6 +28,12 @@ GPIO.setup(PIN_TRIGGER, GPIO.OUT)
 GPIO.setup(PIN_ECHO, GPIO.IN)
 
 GPIO.output(PIN_TRIGGER, GPIO.LOW)
+
+# Servo Motor - SG90
+GPIO.setup(24, GPIO.OUT)
+servo = GPIO.PWM(24, 50)
+# servo.start(0)
+
 
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Air"
@@ -98,17 +105,14 @@ def send_check_water_level_email():
 
 def water_plant(relay, seconds):
     relay.on()
-    # check to see if relay is on
-    
     print("Plant is being watered!")
     time.sleep(seconds)
     print("Watering is finished!")
     relay.off()
 
 def water_pump_actions():
-    time_keeper = TK.TimeKeeper(TK.TimeKeeper.get_current_time())
+#     time_keeper = TK.TimeKeeper(TK.TimeKeeper.get_current_time())
     water_plant(RELAY, SECONDS_TO_WATER)
-    print("\nPlant was last watered at {}".format(time_keeper.time_last_watered))
 #     if(time_keeper.current_time == WATERING_TIME):
 #         water_plant(RELAY, SECONDS_TO_WATER)
 #         time_keeper.set_time_last_watered(TK.TimeKeeper.get_current_time())
@@ -142,6 +146,17 @@ def read_temp():
                 temp_d = float(temp_string) / 1000.0
                 print("Temp: " + str(temp_d))
                 return temp_d
+        
+def start_servo():
+        print("Starting servo")
+        # have the servo rotate 180 degrees and then back to 0 then turn off
+        servo.ChangeDutyCycle(2) # 0 degrees
+        time.sleep(1)
+
+        servo.ChangeDutyCycle(12) # 180 degrees
+        time.sleep(1)
+        print("Servo stopped")
+        
 # --------------------------------------------
 
 while True:
@@ -178,7 +193,8 @@ while True:
                 distance = round(pulse_duration * 17150, 2)
                 print("Distance:",distance,"cm")
                 print("Running Water Pump Actions")
-                water_pump_actions()
+                start_servo()
+                # water_pump_actions()
                 GPIO.cleanup()
         except RuntimeError:
                 print("RuntimeError, trying again...")

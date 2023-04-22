@@ -7,6 +7,8 @@ s = AngularServo(21, min_angle=-90, max_angle=90)
 # s2 = AngularServo(24, min_angle=-90, max_angle=90)
 # s3 = AngularServo(4, min_angle=-90, max_angle=90)
 
+
+
 def update_text():
     s.angle = int(choice.value)
     print("motor1: ", s.angle)
@@ -27,3 +29,4 @@ Text(app, "M1",grid=[1,1])
 # Text(app, "M3",grid=[3,1])
 # Text(app, "M4",grid=[4,1])
 app.display()
+
