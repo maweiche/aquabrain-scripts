@@ -14,6 +14,14 @@ import time
 # Distance Sensor
 GPIO.setmode(GPIO.BOARD)
 
+PIN_TRIGGER = 23
+PIN_ECHO = 32
+
+GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+GPIO.setup(PIN_ECHO, GPIO.IN)
+
+GPIO.output(PIN_TRIGGER, GPIO.LOW)
+
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Air"
 WATER_SENSOR_LOCATION_NAME = "Water"
@@ -75,13 +83,6 @@ while True:
    
                 
 
-                PIN_TRIGGER = 23
-                PIN_ECHO = 32
-
-                GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-                GPIO.setup(PIN_ECHO, GPIO.IN)
-
-                GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
                 print("Waiting for sensor to settle")
 
