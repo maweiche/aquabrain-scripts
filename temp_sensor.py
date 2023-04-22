@@ -59,40 +59,40 @@ def read_temp():
 # Distance Sensor - HC-SR04 ------------------
 
 def read_distance():
-        GPIO.setmode (GPIO.BCM)
-        TRIG_PIN=23
-        ECHO_PIN=32
-        GPIO.setup(TRIG_PIN,GPIO.OUT)
-        GPIO.setup(ECHO_PIN,GPIO.IN)
-        GPIO.OUTPUT(TRIG_PIN,GPIO.LOW)
-        print("Waiting for sensor to settle")
+        try:
+                GPIO.setmode(GPIO.BOARD)
 
-        time.sleep(2)
+                PIN_TRIGGER = 7
+                PIN_ECHO = 11
 
-        print("Calculating distance")
+                GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+                GPIO.setup(PIN_ECHO, GPIO.IN)
 
-        GPIO.output(TRIG_PIN,GPIO.HIGH)
+                GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
-        time.sleep(0.00001)
+                print("Waiting for sensor to settle")
 
+                time.sleep(2)
 
-        GPIO.output(TRIG_PIN,GPIO.LOW)
+                print("Calculating distance")
 
-        while GPIO.input(ECHO_PIN)==0:
-                pulse_start=time.time()
+                GPIO.output(PIN_TRIGGER, GPIO.HIGH)
 
-        while GPIO.input(ECHO_PIN)==1:
-                pulse_end=time.time()
+                time.sleep(0.00001)
 
-        pulse_duration=pulse_end-pulse_start
+                GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
-        pulse_duration=round(pulse_duration,2,2)
+                while GPIO.input(PIN_ECHO)==0:
+                        pulse_start_time = time.time()
+                while GPIO.input(PIN_ECHO)==1:
+                        pulse_end_time = time.time()
 
-        distance=3400*pulse_duration
+                pulse_duration = pulse_end_time - pulse_start_time
+                distance = round(pulse_duration * 17150, 2)
+                print("Distance:",distance,"cm")
 
-        print("Object is",distance,"cm away from the sensor")
-
-        GPIO.cleanup()
+        finally:
+                GPIO.cleanup()
         return distance
 # --------------------------------------------  
 
