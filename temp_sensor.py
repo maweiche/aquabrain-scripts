@@ -17,6 +17,9 @@ import ssl
 from ISStreamer.Streamer import Streamer
 import time
 
+# Water Temp Sensor - DS18B20 ----------------
+os.system('modprobe w1-gpio')
+os.system('modprobe w1-therm')
 
 # Distance Sensor
 GPIO.setmode(GPIO.BCM)
@@ -55,10 +58,6 @@ streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=A
 # Initialize the DHT device, with data pin connected to:
 # dhtSensor = adafruit_dht.DHT22(7, use_pulseio=False)
 dhtSensor = adafruit_dht.DHT22(board.D4, use_pulseio=False)
-
-# Water Temp Sensor - DS18B20 ----------------
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
 
 # Water Pump - Relay -------------------------
 # WATERING_TIME must be in "00:00:00 PM" format
@@ -125,7 +124,9 @@ def water_pump_actions():
 
 
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
+# device_folder = glob.glob(base_dir + '28*')[0] // why would this say list is out of range?
+# why is above line returning error saying list is out of range? 
+
 device_file = device_folder + '/w1_slave'
 
 def read_temp_raw():
