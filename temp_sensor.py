@@ -12,10 +12,10 @@ import time
 
 
 # Distance Sensor
-# GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
-PIN_TRIGGER = board.D11
-PIN_ECHO = board.D12
+PIN_TRIGGER = 11
+PIN_ECHO = 12
 
 GPIO.setup(PIN_TRIGGER, GPIO.OUT)
 GPIO.setup(PIN_ECHO, GPIO.IN)
