@@ -197,6 +197,7 @@ while True:
                 run_servo()
                 GPIO.cleanup()
         except RuntimeError:
+                GPIO.cleanup()
                 print("RuntimeError, trying again...")
                 continue
         except KeyboardInterrupt:
@@ -217,5 +218,5 @@ while True:
                 streamer.log(WATER_PUMP_NAME + ": Run Time (seconds)", SECONDS_TO_WATER)
                 streamer.log(SERVO_MOTOR_A_LOCATION_NAME + ": Fed at", time.strftime("%H:%M:%S"))
         streamer.flush()
-        time.sleep(60*MINUTES_BETWEEN_READS)
+        time.sleep(1*MINUTES_BETWEEN_READS)
 
