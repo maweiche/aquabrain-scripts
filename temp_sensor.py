@@ -206,8 +206,9 @@ while True:
                 print("RuntimeError, trying again...")
                 continue
         except KeyboardInterrupt:
-                servo.stop()
                 GPIO.cleanup()
+                print("KeyboardInterrupt, exiting...")
+                break
                 
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
