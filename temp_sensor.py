@@ -17,21 +17,6 @@ import ssl
 from ISStreamer.Streamer import Streamer
 import time
 
-
-# Distance Sensor
-GPIO.setmode(GPIO.BCM)
-
-PIN_TRIGGER = 11
-PIN_ECHO = 12
-servoPIN = 24
-
-GPIO.setup(servoPIN, GPIO.OUT)
-GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-GPIO.setup(PIN_ECHO, GPIO.IN)
-GPIO.output(PIN_TRIGGER, GPIO.LOW)
-
-servo = GPIO.PWM(servoPIN, 50) # GPIO 24 for PWM with 50Hz
-
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Tank A - Air"
 WATER_SENSOR_LOCATION_NAME = "Tank A - Water"
@@ -150,6 +135,9 @@ def read_temp():
         
 def run_servo():
         print("Running servo")
+        servoPIN = 24
+        GPIO.setup(servoPIN, GPIO.OUT)
+        servo = GPIO.PWM(servoPIN, 50) # GPIO 24 for PWM with 50Hz
         servo.start(2.5) # Initialization
         # rotate 180 degrees then back to 0 degrees
         servo.ChangeDutyCycle(12.5) # 180 degrees
@@ -159,6 +147,40 @@ def run_servo():
         servo.stop()
         print("Servo stopped")
         return 
+
+def measure_distance():
+        # Distance Sensor
+        GPIO.setmode(GPIO.BCM)
+
+        PIN_TRIGGER = 11
+        PIN_ECHO = 12
+
+        GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+        GPIO.setup(PIN_ECHO, GPIO.IN)
+        GPIO.output(PIN_TRIGGER, GPIO.LOW)
+
+        print("Waiting for sensor to settle")
+
+        time.sleep(2)
+
+        print("Calculating distance")
+
+        GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+
+        time.sleep(0.00001)
+
+        GPIO.output(PIN_TRIGGER, GPIO.LOW)
+
+        while GPIO.input(PIN_ECHO)==0:
+                pulse_start_time = time.time()
+        while GPIO.input(PIN_ECHO)==1:
+                pulse_end_time = time.time()
+
+        pulse_duration = pulse_end_time - pulse_start_time
+        distance = round(pulse_duration * 17150, 2)
+        print("Distance:",distance,"cm")
+        return distance
+
 # --------------------------------------------
 
 while True:
@@ -170,27 +192,10 @@ while True:
                 # Water Sensor
                 temp_d = read_temp()
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
+                
+                # Distance Sensor
+                measure_distance()
 
-                print("Waiting for sensor to settle")
-
-                time.sleep(2)
-
-                print("Calculating distance")
-
-                GPIO.output(PIN_TRIGGER, GPIO.HIGH)
-
-                time.sleep(0.00001)
-
-                GPIO.output(PIN_TRIGGER, GPIO.LOW)
-
-                while GPIO.input(PIN_ECHO)==0:
-                        pulse_start_time = time.time()
-                while GPIO.input(PIN_ECHO)==1:
-                        pulse_end_time = time.time()
-
-                pulse_duration = pulse_end_time - pulse_start_time
-                distance = round(pulse_duration * 17150, 2)
-                print("Distance:",distance,"cm")
                 # print("Running Water Pump Actions")
                 # water_pump_actions()
                 print("Running Servo")
