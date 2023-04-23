@@ -193,8 +193,8 @@ while True:
                 pulse_duration = pulse_end_time - pulse_start_time
                 distance = round(pulse_duration * 17150, 2)
                 print("Distance:",distance,"cm")
-                print("Running Water Pump Actions")
-                water_pump_actions()
+                # print("Running Water Pump Actions")
+                # water_pump_actions()
                 print("Running Servo")
                 run_servo()
                 GPIO.cleanup()
