@@ -147,7 +147,7 @@ def run_servo():
         time.sleep(1)
         servo.stop()
         print("Servo stopped")
-        return 
+        return True
 
 def measure_distance():
         PIN_TRIGGER = 11
@@ -192,7 +192,7 @@ while True:
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
                 
                 # Distance Sensor
-                measure_distance()
+                distance = measure_distance()
 
                 # print("Running Water Pump Actions")
                 # water_pump_actions()
