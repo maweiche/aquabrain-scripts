@@ -158,7 +158,7 @@ def run_servo():
         time.sleep(1)
         servo.stop()
         print("Servo stopped")
-       
+        return 
 # --------------------------------------------
 
 while True:
