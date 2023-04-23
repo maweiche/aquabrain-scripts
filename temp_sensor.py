@@ -33,14 +33,14 @@ GPIO.output(PIN_TRIGGER, GPIO.LOW)
 servo = GPIO.PWM(servoPIN, 50) # GPIO 24 for PWM with 50Hz
 
 # --------- User Settings ---------
-AIR_SENSOR_LOCATION_NAME = "Air"
-WATER_SENSOR_LOCATION_NAME = "Water"
+AIR_SENSOR_LOCATION_NAME = "Tank A - Air"
+WATER_SENSOR_LOCATION_NAME = "Tank A - Water"
 DISTANCE_SENSOR_A_LOCATION_NAME = "Filter Water Level"
-SERVO_MOTOR_A_LOCATION_NAME = "Servo Motor"
-WATER_PUMP_NAME = "Water Pump"
-BUCKET_NAME = ":partly_sunny: Room Temperatures"
-BUCKET_KEY = "4WV9PEU4G6K4"
-ACCESS_KEY = "ist_CsfUMjskTuo0o7UEoW-D7tjPb68ZwQru"
+SERVO_MOTOR_A_LOCATION_NAME = "Tank A - Fish"
+WATER_PUMP_NAME = "Tank A - Filter"
+BUCKET_NAME = "Tank_A"
+BUCKET_KEY = "WQD6H7XVNKXE"
+ACCESS_KEY = "ist_6e6lvyD--6Gm7Z6FJri4PZ4q-_pC7t4V"
 MINUTES_BETWEEN_READS = 10
 METRIC_UNITS = False
 # ---------------------------------
@@ -210,12 +210,12 @@ while True:
         else:
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
                 humidity = format(humidity,".2f")
-                streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
-                streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
-                streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
-                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
-                streamer.log(WATER_PUMP_NAME + " Water Pump Run Time (seconds)", SECONDS_TO_WATER)
-                streamer.log(SERVO_MOTOR_A_LOCATION_NAME + " Fish Fed at", time.strftime("%H:%M:%S"))
+                streamer.log(AIR_SENSOR_LOCATION_NAME + ": Humidity(%)", humidity)
+                streamer.log(AIR_SENSOR_LOCATION_NAME + ": Temperature(F)", temp_f)
+                streamer.log(WATER_SENSOR_LOCATION_NAME + ": Temperature(F)", temp_e)
+                streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + ": Distance(cm)", distance)
+                streamer.log(WATER_PUMP_NAME + ": Run Time (seconds)", SECONDS_TO_WATER)
+                streamer.log(SERVO_MOTOR_A_LOCATION_NAME + ": Fed at", time.strftime("%H:%M:%S"))
         streamer.flush()
         time.sleep(60*MINUTES_BETWEEN_READS)
 
