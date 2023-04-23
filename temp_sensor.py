@@ -36,6 +36,7 @@ servo = GPIO.PWM(servoPIN, 50) # GPIO 24 for PWM with 50Hz
 AIR_SENSOR_LOCATION_NAME = "Air"
 WATER_SENSOR_LOCATION_NAME = "Water"
 DISTANCE_SENSOR_A_LOCATION_NAME = "Filter Water Level"
+SERVO_MOTOR_A_LOCATION_NAME = "Servo Motor"
 WATER_PUMP_NAME = "Water Pump"
 BUCKET_NAME = ":partly_sunny: Room Temperatures"
 BUCKET_KEY = "4WV9PEU4G6K4"
@@ -169,9 +170,6 @@ while True:
                 # Water Sensor
                 temp_d = read_temp()
                 temp_e = temp_d * 9.0 / 5.0 + 32.0
-   
-                
-
 
                 print("Waiting for sensor to settle")
 
@@ -211,12 +209,13 @@ while True:
                 
         else:
                 temp_f = format(temp_c * 9.0 / 5.0 + 32.0, ".2f")
+                humidity = format(humidity,".2f")
+                streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(F)", temp_f)
                 streamer.log(WATER_SENSOR_LOCATION_NAME + " Temperature(F)", temp_e)
                 streamer.log(DISTANCE_SENSOR_A_LOCATION_NAME + " Distance(cm)", distance)
                 streamer.log(WATER_PUMP_NAME + " Water Pump Run Time (seconds)", SECONDS_TO_WATER)
-        humidity = format(humidity,".2f")
-        streamer.log(AIR_SENSOR_LOCATION_NAME + " Humidity(%)", humidity)
+                streamer.log(SERVO_MOTOR_A_LOCATION_NAME + " Fish Fed at", time.strftime("%H:%M:%S"))
         streamer.flush()
         time.sleep(60*MINUTES_BETWEEN_READS)
 
