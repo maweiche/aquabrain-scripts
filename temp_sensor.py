@@ -29,7 +29,8 @@ ACCESS_KEY = "ist_6e6lvyD--6Gm7Z6FJri4PZ4q-_pC7t4V"
 MINUTES_BETWEEN_READS = 10
 METRIC_UNITS = False
 # ---------------------------------
-
+# Distance Sensor
+GPIO.setmode(GPIO.BCM)
 # Live Data Stream - Initializer
 streamer = Streamer(bucket_name=BUCKET_NAME, bucket_key=BUCKET_KEY, access_key=ACCESS_KEY)
 
@@ -149,9 +150,6 @@ def run_servo():
         return 
 
 def measure_distance():
-        # Distance Sensor
-        GPIO.setmode(GPIO.BCM)
-
         PIN_TRIGGER = 11
         PIN_ECHO = 12
 
