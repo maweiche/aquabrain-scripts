@@ -23,12 +23,14 @@ GPIO.setmode(GPIO.BCM)
 
 PIN_TRIGGER = 11
 PIN_ECHO = 12
+servoPIN = 24
 
+GPIO.setup(servoPIN, GPIO.OUT)
 GPIO.setup(PIN_TRIGGER, GPIO.OUT)
 GPIO.setup(PIN_ECHO, GPIO.IN)
-
 GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
+servo = GPIO.PWM(servoPIN, 50) # GPIO 24 for PWM with 50Hz
 
 # --------- User Settings ---------
 AIR_SENSOR_LOCATION_NAME = "Air"
@@ -144,6 +146,18 @@ def read_temp():
                 temp_d = float(temp_string) / 1000.0
                 print("Temp: " + str(temp_d))
                 return temp_d
+        
+def run_servo():
+        print("Running servo")
+        servo.start(2.5) # Initialization
+        # rotate 180 degrees then back to 0 degrees
+        servo.ChangeDutyCycle(12.5) # 180 degrees
+        time.sleep(1)
+        servo.ChangeDutyCycle(2.5) # 0 degrees
+        time.sleep(1)
+        servo.stop()
+        print("Servo stopped")
+       
 # --------------------------------------------
 
 while True:
@@ -179,12 +193,17 @@ while True:
                 pulse_duration = pulse_end_time - pulse_start_time
                 distance = round(pulse_duration * 17150, 2)
                 print("Distance:",distance,"cm")
-                print("Running Water Pump Actions")
-                water_pump_actions()
+                # print("Running Water Pump Actions")
+                # water_pump_actions()
+                print("Running Servo")
+                run_servo()
                 GPIO.cleanup()
         except RuntimeError:
                 print("RuntimeError, trying again...")
                 continue
+        except KeyboardInterrupt:
+                servo.stop()
+                GPIO.cleanup()
                 
         if METRIC_UNITS:
                 streamer.log(AIR_SENSOR_LOCATION_NAME + " Temperature(C)", temp_c)
