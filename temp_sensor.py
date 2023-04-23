@@ -198,13 +198,19 @@ while True:
                 # water_pump_actions()
                 print("Running Servo")
                 run_servo()
-                GPIO.cleanup()
+                GPIO.cleanup(
+                       24, 11, 12
+                )
         except RuntimeError:
-                GPIO.cleanup()
+                GPIO.cleanup(
+                        24, 11, 12
+                )
                 print("RuntimeError, trying again...")
                 continue
         except KeyboardInterrupt:
-                GPIO.cleanup()
+                GPIO.cleanup(
+                        24, 11, 12
+                )
                 print("KeyboardInterrupt, exiting...")
                 break
                 
